@@ -12,11 +12,13 @@ This backend handles authentication, customer management, employee management, a
 https://github.com/Rakshitsoni1410/smartkhatabook
 
 ## 🌐 Web Frontend Repository
-https://github.com/Rakshitsoni1410/web-smartkhatabook
+https://github.com/Aayush-0409/smartkhatabook-main--1-
+
 ## live project 
 https://smartkhatabooks.netlify.app/
+
 ## ⚙️ Backend Repository
-https://github.com/Rakshitsoni1410/backend-of-smartkhata-book
+https://github.com/Aayush-0409/backend-of-smartkhata-book-main
 
 ---
 
