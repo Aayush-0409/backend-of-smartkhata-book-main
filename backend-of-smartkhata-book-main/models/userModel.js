@@ -53,13 +53,36 @@ const userSchema = new mongoose.Schema(
       minlength: 6,
     },
 
-    // RESET PASSWORD
-    resetPasswordToken: {
-      type: String,
+    // ==========================================
+    // SINGLE SESSION CONTROL
+    // ==========================================
+
+    sessionVersion: {
+      type: Number,
+      default: 0,
     },
 
-    resetPasswordExpires: {
+    // ==========================================
+    // RESET PASSWORD
+    // ==========================================
+    resetPasswordOtpHash: {
+      type: String,
+      default: null,
+    },
+
+    resetPasswordOtpExpires: {
       type: Date,
+      default: null,
+    },
+
+    resetPasswordOtpAttempts: {
+      type: Number,
+      default: 0,
+    },
+
+    resetPasswordOtpLastSentAt: {
+      type: Date,
+      default: null,
     },
   },
   {
@@ -68,6 +91,7 @@ const userSchema = new mongoose.Schema(
 );
 
 const userModel =
-  mongoose.models.user || mongoose.model("user", userSchema);
+  mongoose.models.user ||
+  mongoose.model("user", userSchema);
 
 export default userModel;
