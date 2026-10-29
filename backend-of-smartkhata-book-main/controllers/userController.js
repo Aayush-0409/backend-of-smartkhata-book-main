@@ -6,10 +6,7 @@ import crypto from "crypto";
 import sendEmail from "../utils/sendEmail.js";
 import connection from "../config/mongodb.js";
 
-import {
-  recordFailedLogin,
-  resetLoginAttempts,
-} from "../middlewares/loginRateLimiter.js";
+
 
 // ==========================================
 // REGISTER USER
@@ -279,22 +276,7 @@ export const loginUser = async (req, res) => {
     // ======================================
 
     if (!user) {
-      const failed = await recordFailedLogin(req);
-
-      // Fifth bad attempt blocks immediately
-      if (failed?.blocked) {
-        return res.status(429).json({
-          success: false,
-
-          code: "LOGIN_TEMPORARILY_BLOCKED",
-
-          message:
-            "Too many failed login attempts. Login has been temporarily blocked for 15 minutes.",
-
-          retryAfter: 15 * 60,
-        });
-      }
-
+      
       return res.status(401).json({
         success: false,
 
@@ -316,21 +298,6 @@ export const loginUser = async (req, res) => {
     // ======================================
 
     if (!isMatch) {
-      const failed = await recordFailedLogin(req);
-
-      if (failed?.blocked) {
-        return res.status(429).json({
-          success: false,
-
-          code: "LOGIN_TEMPORARILY_BLOCKED",
-
-          message:
-            "Too many failed login attempts. Login has been temporarily blocked for 15 minutes.",
-
-          retryAfter: 15 * 60,
-        });
-      }
-
       return res.status(401).json({
         success: false,
 
@@ -340,13 +307,7 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    // ======================================
-    // SUCCESSFUL LOGIN
-    //
-    // Reset failed login counters.
-    // ======================================
-
-    await resetLoginAttempts(req);
+   
 
     // ======================================
     // CREATE NEW SESSION VERSION

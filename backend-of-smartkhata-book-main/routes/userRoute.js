@@ -8,7 +8,7 @@ import {
   getWholesalersByBusiness,
 } from "../controllers/userController.js";
 
-import loginRateLimiter from "../middlewares/loginRateLimiter.js";
+
 
 const router = express.Router();
 
@@ -26,11 +26,8 @@ router.post(
 // ==========================================
 
 // 5 failed attempts -> temporary block
-router.post(
-  "/login",
-  loginRateLimiter,
-  loginUser
-);
+// LOGIN
+router.post("/login", loginUser);
 
 // ==========================================
 // FORGOT PASSWORD - SEND 6 DIGIT OTP

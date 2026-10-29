@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
 
-let cached = global.mongoose;
+let cached = global._mongoose;
 
 if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+  cached = global._mongoose = {
+    conn: null,
+    promise: null,
+  };
 }
 
 const connection = async () => {
@@ -11,17 +14,28 @@ const connection = async () => {
     return cached.conn;
   }
 
+  if (!process.env.MONGO_URI) {
+    throw new Error("MONGO_URI is missing from environment variables.");
+  }
+
   if (!cached.promise) {
     console.log("Connecting to MongoDB...");
-    cached.promise = mongoose.connect(process.env.MONGO_URI, {
-      bufferCommands: false,
-      serverSelectionTimeoutMS: 30000,
-      socketTimeoutMS: 60000,
-      connectTimeoutMS: 30000,
-    }).then((mongoose) => {
-      console.log("✅ Database Connected");
-      return mongoose;
-    });
+
+    cached.promise = mongoose
+      .connect(process.env.MONGO_URI, {
+        bufferCommands: false,
+        serverSelectionTimeoutMS: 30000,
+        connectTimeoutMS: 30000,
+        socketTimeoutMS: 60000,
+      })
+      .then((mongooseInstance) => {
+        console.log("✅ Database Connected");
+        return mongooseInstance;
+      })
+      .catch((error) => {
+        cached.promise = null;
+        throw error;
+      });
   }
 
   try {
